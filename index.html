@@ -1,0 +1,412 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Gerador de Ícones</title>
+
+    <meta name="author" content="spilymp">
+    <meta name="description" content="An simple Icon Builder for WETH, which provide the ability to create app icons in the style of the appicons of the ERP system WETH.">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" type="text/css" href="css/milligram.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <script type="text/javascript" src="js/weth_icon.js"></script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let icon = new WETH_ICON({
+                'font_family': 'Font Awesome 6 Free',
+                'icon_class': 'fa-solid fa-users-gear',
+            });
+            icon.draw("icon");
+        });
+
+        function generate() {
+            document.getElementById("icon").innerHTML = '';
+            let icon = new WETH_ICON({
+                'font_color': document.getElementById('iconFontColor').value,
+                'font_family': document.getElementById('iconSet').value,
+                'font_size': document.getElementById('iconFontSizeValue').value,
+                'font_weight': document.getElementById('fontWeight').value,
+                'icon_background': document.getElementById('iconBackgroundColor').value,
+                'icon_class': document.getElementById('iconClass').value,
+                'icon_width': document.getElementById('iconSizeValue').value,
+                'weth_version': document.getElementById('wethVersion').value,
+            });
+            icon.draw("icon");
+        }
+
+        function toggle_settings() {
+            document.querySelectorAll('.settings-card').forEach(function (element) {
+                element.classList.toggle('deactivated');
+            });
+        }
+
+        function download() {
+            let image = document.getElementsByClassName('weth-icon-canvas')[0].toDataURL("image/png").replace("image/png", "image/octet-stream");
+            document.getElementById('download').setAttribute('href', image);
+        }
+
+        function populateIconSetWebsite() {
+            switch (document.getElementById('iconSet').value) {
+                case "Font Awesome 6 Brands":
+                    document.getElementById('iconSetWebsite').href = "https://fontawesome.com/v6/search?o=r&ic=free&ip=brands"
+                    document.getElementById('iconClass').placeholder = "e.g. fab fa-github"
+                    break;
+            }
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+    <!-- pre loading the fonts so they are available for the js class -->
+    <div class="font_preload" style="opacity: 0">
+        <span style="font-family: 'Font Awesome 6 Free', Arial, sans-serif;"></span>
+        <span style="font-family: 'Font Awesome 6 Brands', Arial, sans-serif;"></span>
+    </div>
+
+    <header class="container">
+        <div class="row">
+            <div class="column align-center">
+                <h1>Gerador de Ícones</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row row-center">
+            <div class="column align-center settings-card front">
+
+                <div class="row">
+                    <div class="column column-center">
+                        <label for="wethVersion">WETH Version</label>
+                    </div>
+                    <div class="column">
+                        <select id="wethVersion">
+                            <option value="25.0">25.0</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row icon-set-website">
+                    <div class="column column-center column-50">
+                        <label for="iconSet">Icon Set</label>
+                    </div>
+
+                    <div class="column column-40">
+                        <select id="iconSet" onchange="populateIconSetWebsite()">
+                            <option value="Font Awesome 6 Free">Font Awesome 6 Solid & Regular</option>
+                            <option value="Font Awesome 6 Brands">Font Awesome 6 Brands</option>
+                        </select>
+                    </div>
+
+                    <div class="column">
+                        <a href="https://fontawesome.com/v6/search?o=r&ic=free&s=solid%2Cregular" id="iconSetWebsite"
+                            class="button button-outline" target="_blank">
+                            <i class="fas fa-globe-europe button-icon"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="column column-center">
+                        <label for="iconClass">Icon Class</label><i id="icon-preview"></i>
+                    </div>
+                    <div class="column">
+                        <input id="iconClass" type="text" placeholder="e.g. fas fa-address-card">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="column column-center">
+                        <label for="iconBackgroundColor">Icon Background Color</label>
+                    </div>
+                    <div class="column">
+                        <input type="color" onchange="clickColor(0, -1, -1, 5)" value="#003c7d"
+                            id="iconBackgroundColor">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="column align-right">
+                        
+                        <button class="button button-outline" type="submit" value="Switch Settings" onclick="toggle_settings()">
+                            <i class="fas fa-sliders-h button-icon"></i>
+                        </button>
+
+                        <button class="button button-outline" type="submit" value="Generate" onclick="generate()">
+                            <i class="fas fa-play button-icon"></i>
+                        </button>
+
+                        <a id="download" download="weth_icon.png">
+                            <button type="submit" value="Download" onclick="download()">
+                                Download
+                            </button>
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="column align-center settings-card back deactivated">
+
+                <div class="row">
+                    <div class="column column-center">
+                        <label for="iconFontColor">Icon Font Color</label>
+                    </div>
+                    <div class="column">
+                        <input id="iconFontColor" type="color" onchange="clickColor(0, -1, -1, 5)" value="#ffffff">
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="column column-center">
+                        <label for="iconSize">Icon Size</label>
+                    </div>
+                    <div class="column">
+                        <div class="row" id="iconSize">
+                            <div class="column column-center">
+                                <input id="iconSizeSlider" type="range" value="300" min="100" max="800" oninput="document.getElementById('iconSizeValue').value = this.value">
+                            </div>
+                            <div class="column column-center">
+                                <input id="iconSizeValue" type="text" value="300">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="column column-center">
+                        <label for="iconFontSize">Icon Font Size</label>
+                    </div>
+                    <div class="column">
+                        <div class="row" id="iconFontSize">
+                            <div class="column column-center">
+                                <input id="iconFontSizeSlider" type="range" value="150" min="00" max="800" oninput="document.getElementById('iconFontSizeValue').value = this.value">
+                            </div>
+                            <div class="column column-center">
+                                <input id="iconFontSizeValue" type="text" value="150">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="column column-center">
+                        <label for="fontWeight">Icon Font Weight</label>
+                    </div>
+                    <div class="column">
+                        <select id="fontWeight">
+                            <option value="900" selected>Normal</option>
+                            <option value="300">Light</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="column align-right">
+
+                        <button class="button button-outline" type="submit" value="Switch Settings" onclick="toggle_settings()">
+                            <i class="fas fa-sliders-h button-icon"></i>
+                        </button>
+
+                        <button class="button button-outline" type="submit" value="Generate" onclick="generate()">
+                            <i class="fas fa-play button-icon"></i>
+                        </button>
+
+                        <a id="download" download="weth_icon.png">
+                            <button type="submit" value="Download" onclick="download()">
+                                Download
+                            </button>
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="column align-center">
+                <div id="icon"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="column">
+                <h2>Documentation</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <p class="section-description">
+                    The configurator above can be used to quickly and easily create new appicons in the style of the
+                    appicons of the ERP system <a href="https://www.weth.com.br/" rel="external nofollow">WETH</a>.
+
+                    To set an icon you have to find and enter the corresponding css class.
+                    Please check the corresponding page of the icon set for this purpose:
+                <ul>
+                    <li><a href="https://fontawesome.com/v6/search?o=r&ic=free&s=solid%2Cregular">Font Awesome 6 Solid &
+                            Regular</a></li>
+                    <li><a href="https://fontawesome.com/search?o=r&ic=free&ip=brands">Font Awesome 6 Brands</a></li>
+                </ul>
+                <span><strong>Note:</strong> The icon pack which WETH uses up to version 15 is Font Awesome 4.7!</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                <h3>Getting Started</h3>
+            </div>
+        </div>
+        <div class="row row-center">
+            <div class="column">
+                <p>
+                    It is also possible to use the class elsewhere and create your own configurator based on it, for
+                    example.
+                    For this purpose, the class offers a few more parameters for individualization in addition to the
+                    options shown above.
+                </p>
+            </div>
+        </div>
+        <div class="row row-center">
+            <div class="column">
+                <p>
+                    The basis of the configurator is a JavaScript class "WETH_ICON", which creates a canvas and "paints"
+                    the icon on it.
+                    If the existing class is used directly by means of a script, additional parameters can be passed.
+                    If this class is instantiated, various parameters can be passed to it (see sample code block on the
+                    right).
+                    If not, default values are used in each case.
+                </p>
+            </div>
+            <div class="column">
+                <pre>
+                        <code>[...]
+let icon = new WETH_ICON({
+    'font_family': 'Font Awesome 6 Free',
+    'icon_class': 'fa-solid fa-users-gear',
+});
+[...]</code>
+                </pre>
+            </div>
+        </div>
+
+        <div class="row row-center">
+            <div class="column">
+                <p>
+                    The actual creation then takes place in the "draw" method.
+                    The ID of an HTML element to which the created canvas is attached must be specified here as a
+                    parameter.
+                </p>
+            </div>
+            <div class="column">
+                <pre>
+                        <code>[...]
+icon.draw("icon");
+[...]</code>
+                </pre>
+            </div>
+        </div>
+
+        <div class="row">
+            <h3>Parameter</h3>
+        </div>
+
+        <div class="row">
+            <div class="column">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Values</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>font_color</td>
+                            <td>e.g. "#ffffff"</td>
+                            <td>Hex color value for the text or symbol.</td>
+                        </tr>
+                        <tr>
+                            <td>font_family</td>
+                            <td>e.g. "Font Awesome 6 Free"</td>
+                            <td>Font family for your text or symbol. Make sure the family is added to your page!</td>
+                        </tr>
+                        <tr>
+                            <td>font_size</td>
+                            <td>e.g. "40"</td>
+                            <td>Font size for your text or symbol.</td>
+                        </tr>
+                        <tr>
+                            <td>font_weight</td>
+                            <td>e.g. "900"</td>
+                            <td>Font weight for your text or symbol.</td>
+                        </tr>
+                        <tr>
+                            <td>icon_background</td>
+                            <td>e.g. "#003c7d"</td>
+                            <td>Hex color value for the background of your icon.</td>
+                        </tr>
+                        <tr>
+                            <td>icon_class</td>
+                            <td>e.g. "fas fa-address-card"</td>
+                            <td>CSS class name of your symbol for the icon, the class will automatically try to find
+                                the corresponding unicode. If an unicode (parameter "icon_text") is set the class will
+                                be ignored.</td>
+                        </tr>
+                        <tr>
+                            <td>icon_text</td>
+                            <td>e.g. "Test"</td>
+                            <td>The text or symbol which should be displayed on the icon. Will be preferred over the
+                                parameter "icon_class" if set.</td>
+                        </tr>
+                        <tr>
+                            <td>icon_width</td>
+                            <td>e.g. "300"</td>
+                            <td>The width of your icon (in px), will also be the height of your icon.</td>
+                        </tr>
+                        <tr>
+                            <td>weth_version</td>
+                            <td>["25.0"]</td>
+                            <td>The weth version for which the icon should be generated.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer class="container">
+        <div class="row">
+            <hr />
+        </div>
+        <div class="row">
+            <div class="column column-50">
+                <p>
+                    <a href="https://thiagomacedo.com.br"><b>Thiago Macêdo</b></a>.
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
