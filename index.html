@@ -55,13 +55,19 @@
         }
 
         function populateIconSetWebsite() {
-            switch (document.getElementById('iconSet').value) {
-                case "Font Awesome 6 Brands":
-                    document.getElementById('iconSetWebsite').href = "https://fontawesome.com/v6/search?o=r&ic=free&ip=brands"
-                    document.getElementById('iconClass').placeholder = "ex. fab fa-github"
-                    break;
+            let iconSet = document.getElementById('iconSet').value;
+            let iconSetWebsite = document.getElementById('iconSetWebsite');
+            let iconClassInput = document.getElementById('iconClass');
+
+            if (iconSet === "Font Awesome 6 Brands") {
+                iconSetWebsite.href = "https://fontawesome.com/v6/search?o=r&ic=free&ip=brands";
+                iconClassInput.placeholder = "ex. fab fa-github";
+            } else {
+                iconSetWebsite.href = "https://fontawesome.com/v6/search?o=r&ic=free&s=solid,regular";
+                iconClassInput.placeholder = "ex. fas fa-address-card";
             }
         }
+
 
     </script>
 
