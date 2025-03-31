@@ -16,6 +16,8 @@
             let icon = new WETH_ICON({
                 'font_family': 'Font Awesome 6 Free',
                 'icon_class': 'fa-solid fa-users-gear',
+                'icon_width': '200',
+                'font_size': '100'
             });
             icon.draw("icon");
         });
@@ -41,12 +43,13 @@
             let icon = new WETH_ICON({
                 'font_color': document.getElementById('iconFontColor').value,
                 'font_family': document.getElementById('iconSet').value,
-                'font_size': document.getElementById('iconFontSizeValue').value,
                 'font_weight': document.getElementById('fontWeight').value,
                 'icon_background': document.getElementById('iconBackgroundColor').value,
                 'icon_class': iconValue,
-                'icon_width': document.getElementById('iconSizeValue').value,
                 'weth_version': document.getElementById('wethVersion').value,
+                // Tamanho fixo definido no código, não na interface
+                'icon_width': '200',
+                'font_size': '100'
             });
             icon.draw("icon");
         }
@@ -82,12 +85,13 @@
             let iconInstance = new WETH_ICON({
                 'font_color': document.getElementById('iconFontColor').value,
                 'font_family': document.getElementById('iconSet').value,
-                'font_size': document.getElementById('iconFontSizeValue').value,
                 'font_weight': document.getElementById('fontWeight').value,
                 'icon_background': document.getElementById('iconBackgroundColor').value,
                 'icon_class': iconClassValue,
-                'icon_width': document.getElementById('iconSizeValue').value,
                 'weth_version': document.getElementById('wethVersion').value,
+                // Tamanho fixo definido no código, não na interface
+                'icon_width': '200',
+                'font_size': '100'
             });
 
             let svgData = iconInstance.generateSVG();
@@ -106,7 +110,7 @@
                 iconSetWebsite.href = "https://fontawesome.com/v6/search?o=r&ic=free&ip=brands";
                 iconClassInput.placeholder = "ex. github";
             } else {
-                iconSetWebsite.href = "https://fontawesome.com/v6/search?o=r&ic=free&s=solid,regular";
+                iconSetWebsite.href = "https://fontawesome.com/v6/search?o=r&ic=free&s=solid%2Cregular";
                 iconClassInput.placeholder = "ex. address-card";
             }
         }
@@ -197,36 +201,6 @@
                     </div>
                     <div class="column">
                         <input id="iconFontColor" type="color" onchange="clickColor(0, -1, -1, 5)" value="#ffffff">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column column-center">
-                        <label for="iconSize">Tamanho do Ícone</label>
-                    </div>
-                    <div class="column">
-                        <div class="row" id="iconSize">
-                            <div class="column column-center">
-                                <input id="iconSizeSlider" type="range" value="300" min="100" max="800" oninput="document.getElementById('iconSizeValue').value = this.value">
-                            </div>
-                            <div class="column column-center">
-                                <input id="iconSizeValue" type="text" value="300">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column column-center">
-                        <label for="iconFontSize">Tamanho da Fonte</label>
-                    </div>
-                    <div class="column">
-                        <div class="row" id="iconFontSize">
-                            <div class="column column-center">
-                                <input id="iconFontSizeSlider" type="range" value="150" min="0" max="800" oninput="document.getElementById('iconFontSizeValue').value = this.value">
-                            </div>
-                            <div class="column column-center">
-                                <input id="iconFontSizeValue" type="text" value="150">
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="row">

@@ -1,20 +1,26 @@
 class WETH_ICON {
     constructor(settings) {
+        // Valores padrão
         this.font_color = "#ffffff";
         this.font_family = "Font Awesome 6 Free";
         this.font_weight = "900";
         this.icon_background = "#003c7d";
         this.icon_class = "fas fa-address-card";
-        this.icon_width = "300";
+        this.icon_width = "200"; // Tamanho fixo do ícone
+        this.font_size = "100";  // Tamanho fixo da fonte
         this.weth_version = "25.0";
 
+        // Aplica configurações personalizadas, exceto tamanhos
         if (settings != null) {
-            Object.assign(this, settings);
+            // Copia todas as configurações, exceto tamanho do ícone e fonte
+            const settingsCopy = {...settings};
+            delete settingsCopy.icon_width;
+            delete settingsCopy.font_size;
+            
+            // Aplica as configurações, mantendo os tamanhos fixos
+            Object.assign(this, settingsCopy);
         }
 
-        if (settings != null && !("font_size" in settings)) {
-            this.font_size = parseInt(this.icon_width) * 0.5;
-        }
         if (settings != null && !("icon_text" in settings)) {
             this.icon_class = this._normalizeIconClass(this.icon_class);
             let ufw = this._getUnicodeAndFontWeight(this.icon_class);
@@ -241,23 +247,32 @@ class WETH_ICON {
     }
 
     generateSVG() {
-        let radius = this.icon_width * 0.047;
-        let is_height = this.icon_width * 0.015;
-        let center = this.icon_width / 2;
-        let shadowOffsetY = this.icon_width * 0.02;
+        // Garantir que as propriedades são números, não strings
+        const iconWidth = parseInt(this.icon_width);
+        const fontSize = parseInt(this.font_size);
+        
+        // Calcular proporções baseadas no tamanho atual
+        let radius = iconWidth * 0.047;
+        let is_height = iconWidth * 0.015;
+        let center = iconWidth / 2;
+        let shadowOffsetY = iconWidth * 0.02;
 
+        // Obter char e paths do ícone
         let [iconText, _] = this._getUnicodeAndFontWeight(this.icon_class);
         let iconPath = this._getFontAwesomePath(this.icon_class);
         
+        // Cor da sombra
         let darkBackground = this._pSBC(-0.4, this.icon_background);
 
-        let scale = this.font_size / 512;
+        // Fatores de escala para path SVG
+        let scale = fontSize / 512;
 
+        // Construa o SVG com as dimensões e cores personalizadas
         let svg = `
-<svg width="${this.icon_width}" height="${this.icon_width}" viewBox="0 0 ${this.icon_width} ${this.icon_width}" xmlns="http://www.w3.org/2000/svg">
+<svg width="${iconWidth}" height="${iconWidth}" viewBox="0 0 ${iconWidth} ${iconWidth}" xmlns="http://www.w3.org/2000/svg">
     <defs>
         <clipPath id="roundedCorners">
-            <path d="M${radius} 0H${this.icon_width - radius}C${this.icon_width-radius*0.45} 0 ${this.icon_width} ${radius*0.45} ${this.icon_width} ${radius}V${this.icon_width - radius}C${this.icon_width} ${this.icon_width-radius*0.45} ${this.icon_width-radius*0.45} ${this.icon_width} ${this.icon_width - radius} ${this.icon_width}H${radius}C${radius*0.45} ${this.icon_width} 0 ${this.icon_width-radius*0.45} 0 ${this.icon_width - radius}V${radius}C0 ${radius*0.45} ${radius*0.45} 0 ${radius} 0Z" />
+            <path d="M${radius} 0H${iconWidth - radius}C${iconWidth-radius*0.45} 0 ${iconWidth} ${radius*0.45} ${iconWidth} ${radius}V${iconWidth - radius}C${iconWidth} ${iconWidth-radius*0.45} ${iconWidth-radius*0.45} ${iconWidth} ${iconWidth - radius} ${iconWidth}H${radius}C${radius*0.45} ${iconWidth} 0 ${iconWidth-radius*0.45} 0 ${iconWidth - radius}V${radius}C0 ${radius*0.45} ${radius*0.45} 0 ${radius} 0Z" />
         </clipPath>
         
         <linearGradient id="overlayGradient" x1="0%" y1="100%" x2="100%" y2="0%">
@@ -270,17 +285,24 @@ class WETH_ICON {
         </filter>
     </defs>
 
+    <!-- Grupo com clip-path para cantos arredondados, contém TODOS os elementos -->
     <g clip-path="url(#roundedCorners)">
-        <rect x="0" y="0" width="${this.icon_width}" height="${this.icon_width}" fill="${this.icon_background}" />
+        <!-- Fundo principal com a cor personalizada -->
+        <rect x="0" y="0" width="${iconWidth}" height="${iconWidth}" fill="${this.icon_background}" />
         
-        <path d="M0 0h${this.icon_width}v${is_height}h-${this.icon_width}z" fill="white" fill-opacity="0.38" />
+        <!-- Borda interna superior (branca) -->
+        <path d="M0 0h${iconWidth}v${is_height}h-${iconWidth}z" fill="white" fill-opacity="0.38" />
         
-        <path d="M0 ${this.icon_width-is_height}h${this.icon_width}v${is_height}h-${this.icon_width}z" fill="#282F33" fill-opacity="0.4" />
+        <!-- Borda interna inferior (preta) -->
+        <path d="M0 ${iconWidth-is_height}h${iconWidth}v${is_height}h-${iconWidth}z" fill="#282F33" fill-opacity="0.4" />
         
-        <rect x="0" y="0" width="${this.icon_width}" height="${this.icon_width}" fill="url(#overlayGradient)" opacity="0.2" />
+        <!-- Gradiente de sobreposição como no Canvas -->
+        <rect x="0" y="0" width="${iconWidth}" height="${iconWidth}" fill="url(#overlayGradient)" opacity="0.2" />
         
-        ${this._generateHardShadowSVG(iconPath, darkBackground, scale, center)}
+        <!-- Efeito sombra 3D com o tamanho personalizado -->
+        ${this._generateHardShadowSVG(iconPath, darkBackground, scale, center, iconWidth)}
         
+        <!-- Ícone principal com a cor personalizada -->
         <g transform="translate(${center}, ${center}) scale(${scale})" filter="url(#dropShadow)">
             <path d="${iconPath}" fill="${this.font_color}" transform="translate(-256, -256)" />
         </g>
@@ -290,16 +312,20 @@ class WETH_ICON {
         return svg;
     }
     
-    _generateHardShadowSVG(iconPath, shadowColor, scale, center) {
+    // Gera o efeito de sombra 3D para o ícone - reproduz exatamente o método _setHardShadow()
+    _generateHardShadowSVG(iconPath, shadowColor, scale, center, iconWidth) {
         let shadowEffect = '';
         
-        const shadowCount = Math.floor(this.icon_width * 0.6);
-        const step = Math.max(1, Math.floor(shadowCount / 20));
+        // Usando as mesmas constantes do método _setHardShadow() do Canvas
+        const shadowCount = Math.floor(iconWidth * 0.6); // Limita para desempenho
+        const step = Math.max(1, Math.floor(shadowCount / 20)); // Reduz número de camadas
         
         for (let i = 0; i < shadowCount; i += step) {
-            const tmpWidth = (parseInt(this.icon_width) - 2 * i) / 2;
-            const tmpHeight = (parseInt(this.icon_width) + 2 * i) / 2;
+            // Usa exatamente a mesma fórmula do Canvas para posicionamento
+            const tmpWidth = (parseInt(iconWidth) - 2 * i) / 2;
+            const tmpHeight = (parseInt(iconWidth) + 2 * i) / 2;
             
+            // Calcula a opacidade - mais próxima do topo = mais transparente
             const opacity = Math.max(0.08, 0.6 - (i / shadowCount) * 0.7);
             
             shadowEffect += `
