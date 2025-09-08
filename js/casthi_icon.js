@@ -61,6 +61,11 @@ class CASTHI_ICON {
         this.canvas.height = this.icon_width;
         this.canvas.width = this.icon_width;
         this._ctx = this.canvas.getContext("2d");
+        
+        // Limpar canvas e garantir transparência
+        this._ctx.clearRect(0, 0, this.icon_width, this.icon_width);
+        this._ctx.globalAlpha = 1.0; // Garantir opacidade total
+        
         this._ctx.font = `${this.font_weight} ${this.font_size}px "${this.font_family}"`;
     }
 
@@ -89,7 +94,10 @@ class CASTHI_ICON {
     }
 
     _setText() {
-        this._drawText(this.icon_text, this.font_color, parseInt(this.icon_width) / 2, parseInt(this.icon_width) / 2, this.font_size);
+        // Ajustar posição vertical para centralização perfeita
+        let centerX = parseInt(this.icon_width) / 2;
+        let centerY = parseInt(this.icon_width) / 2 + (parseInt(this.font_size) * 0.1); // Ajuste para Material Icons
+        this._drawText(this.icon_text, this.font_color, centerX, centerY, this.font_size);
     }
 
     _drawText(text, color, centerX, centerY, font_size) {
@@ -217,36 +225,8 @@ class CASTHI_ICON {
         return [char, font_weight];
     }
 
-    generateSVG() {
-        // Garantir que as propriedades são números, não strings
-        const iconWidth = parseInt(this.icon_width);
-        const fontSize = parseInt(this.font_size);
-        
-        // Calcular proporções baseadas no tamanho atual
-        let radius = iconWidth * 0.047;
-        let center = iconWidth / 2;
-
-        // Obter texto do ícone
-        let [iconText, _] = this._getUnicodeAndFontWeight(this.icon_class);
-
-        // SVG simples como padrão Odoo
-        let svg = `
-<svg width="${iconWidth}" height="${iconWidth}" viewBox="0 0 ${iconWidth} ${iconWidth}" xmlns="http://www.w3.org/2000/svg">
-    <rect x="0" y="0" width="${iconWidth}" height="${iconWidth}" fill="${this.icon_background}" rx="${radius}"/>
-    <text x="${center}" y="${center}" text-anchor="middle" dominant-baseline="central" 
-          font-family="${this.font_family}" font-size="${fontSize}" 
-          font-weight="${this.font_weight}" fill="${this.font_color}">
-        ${iconText}
-    </text>
-</svg>`;
-        
-        return svg;
-    }
+    // SVG removido - foco apenas em PNG
     
     
-    _getMaterialIconPath(iconName) {
-        // Para Material Icons, não temos paths SVG específicos como Font Awesome
-        // Retornamos um path genérico que será substituído pelo texto do ícone
-        return 'M0 0h512v512H0z'; // Path genérico para fallback
-    }
+    // Função removida - não mais necessária
 }
