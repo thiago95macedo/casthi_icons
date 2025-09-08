@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <title>Gerador de Ícones</title>
+    <meta name="author" content="spilymp">
+    <meta name="description" content="Um construtor de ícones simples, que oferece a capacidade de criar ícones de aplicativos no estilo dos ícones de aplicativos do sistema CasThi.">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="css/milligram.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <script type="text/javascript" src="js/casthi_icon.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let icon = new CASTHI_ICON({
+                'font_family': 'Material Symbols Outlined',
+                'icon_class': 'person',
+                'icon_width': '200',
+                'font_size': '160'
+            });
+            icon.draw("icon");
+        });
+
+        function generate() {
+            document.getElementById("icon").innerHTML = '';
+            
+            // Obtém o valor do nome do ícone Material
+            let iconValue = document.getElementById('iconClass').value.trim();
+            
+            // Se não foi inserido nada, usa um ícone padrão
+            if (!iconValue) {
+                iconValue = 'person';
+            }
+            
+            let icon = new CASTHI_ICON({
+                'font_color': document.getElementById('iconFontColor').value,
+                'font_family': 'Material Symbols Outlined',
+                'font_weight': document.getElementById('fontWeight').value,
+                'icon_background': document.getElementById('iconBackgroundColor').value,
+                'icon_class': iconValue,
+                'casthi_version': document.getElementById('casthiVersion').value,
+                // Tamanho fixo definido no código, não na interface (80% proporção ERP)
+                'icon_width': '200',
+                'font_size': '160'
+            });
+            icon.draw("icon");
+        }
+
+        function toggle_settings() {
+            document.querySelectorAll('.settings-card').forEach(function (element) {
+                element.classList.toggle('deactivated');
+            });
+        }
+
+        function downloadPNG() {
+            let image = document.getElementsByClassName('casthi-icon-canvas')[0].toDataURL("image/png").replace("image/png", "image/octet-stream");
+            document.getElementById('downloadPNG').setAttribute('href', image);
+        }
+
+        function downloadSVG() {
+            let iconClassValue = document.getElementById('iconClass').value.trim();
+            
+            // Se não foi inserido nada, usa um ícone padrão
+            if (!iconClassValue) {
+                iconClassValue = 'person';
+            }
+            
+            console.log("Ícone inserido:", iconClassValue); // Depuração
+
+            let iconInstance = new CASTHI_ICON({
+                'font_color': document.getElementById('iconFontColor').value,
+                'font_family': 'Material Symbols Outlined',
+                'font_weight': document.getElementById('fontWeight').value,
+                'icon_background': document.getElementById('iconBackgroundColor').value,
+                'icon_class': iconClassValue,
+                'casthi_version': document.getElementById('casthiVersion').value,
+                // Tamanho fixo definido no código, não na interface (80% proporção ERP)
+                'icon_width': '200',
+                'font_size': '160'
+            });
+
+            let svgData = iconInstance.generateSVG();
+            console.log("SVG gerado:", svgData); // Depuração
+            let svgBlob = new Blob([svgData], {type: 'image/svg+xml'});
+            let svgUrl = URL.createObjectURL(svgBlob);
+            document.getElementById('downloadSVG').setAttribute('href', svgUrl);
+            document.getElementById('downloadSVG').setAttribute('download', 'casthi_icon.svg');
+        }
+
+        function populateIconSetWebsite() {
+            let iconSetWebsite = document.getElementById('iconSetWebsite');
+            let iconClassInput = document.getElementById('iconClass');
+            
+            iconSetWebsite.href = "https://fonts.google.com/icons";
+            iconClassInput.placeholder = "ex. person, home, settings";
+        }
+    </script>
+</head>
+<body>
+    <div class="font_preload" style="opacity: 0">
+        <span style="font-family: 'Material Symbols Outlined', Arial, sans-serif;"></span>
+    </div>
+
+    <header class="container">
+        <div class="row">
+            <div class="column align-center">
+                <img src="assets/images/logo.png" alt="Logotipo CasThi" style="max-width: 350px; height: auto;">
+                <h1>Gerador de Ícones</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row row-center">
+            <div class="column align-center settings-card front">
+                <div class="row">
+                    <div class="column column-center">
+                        <label for="casthiVersion">CasThi Versão</label>
+                    </div>
+                    <div class="column">
+                        <select id="casthiVersion">
+                            <option value="25.0">25.0</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row icon-set-website">
+                    <div class="column column-center column-50">
+                        <label for="iconClass">Ícone Material</label>
+                    </div>
+                    <div class="column column-40">
+                        <input id="iconClass" type="text" placeholder="ex. person, home, settings">
+                    </div>
+                    <div class="column">
+                        <a href="https://fonts.google.com/icons" id="iconSetWebsite" class="button button-outline" target="_blank">
+                            <i class="material-symbols-outlined button-icon">language</i>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column column-center">
+                        <label for="iconBackgroundColor">Cor do Background</label>
+                    </div>
+                    <div class="column">
+                        <input type="color" onchange="clickColor(0, -1, -1, 5)" value="#05285B" id="iconBackgroundColor">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column align-right">
+                        <button class="button button-outline" type="submit" value="Switch Settings" onclick="toggle_settings()">
+                            <i class="material-symbols-outlined button-icon">tune</i>
+                        </button>
+                        <button class="button button-outline" type="submit" value="Generate" onclick="generate()">
+                            <i class="material-symbols-outlined button-icon">play_arrow</i>
+                        </button>
+                        <a id="downloadPNG" download="casthi_icon.png">
+                            <button type="submit" value="Download PNG" onclick="downloadPNG()">Download PNG</button>
+                        </a>
+                        <a id="downloadSVG">
+                            <button type="submit" value="Download SVG" onclick="downloadSVG()">Download SVG</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column align-center settings-card back deactivated">
+                <div class="row">
+                    <div class="column column-center">
+                        <label for="iconFontColor">Cor da Fonte</label>
+                    </div>
+                    <div class="column">
+                        <input id="iconFontColor" type="color" onchange="clickColor(0, -1, -1, 5)" value="#ffffff">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column column-center">
+                        <label for="fontWeight">Peso da Fonte</label>
+                    </div>
+                    <div class="column">
+                        <select id="fontWeight">
+                            <option value="900" selected>Normal</option>
+                            <option value="300">Light</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column align-right">
+                        <button class="button button-outline" type="submit" value="Switch Settings" onclick="toggle_settings()">
+                            <i class="material-symbols-outlined button-icon">tune</i>
+                        </button>
+                        <button class="button button-outline" type="submit" value="Generate" onclick="generate()">
+                            <i class="material-symbols-outlined button-icon">play_arrow</i>
+                        </button>
+                        <a id="downloadPNG" download="casthi_icon.png">
+                            <button type="submit" value="Download PNG" onclick="downloadPNG()">Download PNG</button>
+                        </a>
+                        <a id="downloadSVG">
+                            <button type="submit" value="Download SVG" onclick="downloadSVG()">Download SVG</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column align-center">
+                <div id="icon"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="column">
+                <h2>Documentação</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <p class="section-description">
+                    O Gerador de Ícones para o <a href="https://www.casthi.com.br/" rel="external nofollow"><b>CasThi</b></a>,
+                    permite criar novos ícones de aplicativo de forma rápida e personalizada, seguindo o estilo visual 
+                    do sistema. gerando arquivos PNG e SVG.
+                </p>
+                <p class="section-description">
+                    Para configurar um ícone, basta identificar o nome do ícone Material e inseri-lo no 
+                    campo adequado. Consulte a página oficial do Google para encontrar o ícone ideal:
+                </p>
+                <ul>
+                    <li><a href="https://fonts.google.com/icons">Material Symbols</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer class="container">
+        <div class="row align-center">
+            <div class="column align-center">
+                <p>© 2025 <a href="https://casthi.com.br"><b>CasThi</b></a></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
